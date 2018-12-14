@@ -1,0 +1,48 @@
+            string filePath = "";
+            openFileDialog1.Filter = "*.bin|*.bin";
+            openFileDialog1.ShowDialog();
+            filePath = openFileDialog1.FileName;
+            ////原版,打开几十kb的文件时间还行，上百kb之后时间就慢的卡住，主要是Mytext += j.ToString("X2");处理时间长，牵扯到垃圾回收机制
+
+            //string Mytext = "";
+            //int file_len;
+            //byte[] binchar = new byte[] { };
+
+            //FileStream Myfile = new FileStream(textBox2.Text, FileMode.Open, FileAccess.Read);
+            //BinaryReader binreader = new BinaryReader(Myfile);
+
+            //file_len = (int)Myfile.Length;//获取bin文件长度
+            //binchar = binreader.ReadBytes(file_len);
+
+            //foreach (byte j in binchar)
+            //{
+            //    Mytext += j.ToString("X2");
+            //    Mytext += " ";
+            //}
+
+            //textBox1.Text = Mytext;
+            //binreader.Close();
+
+
+            //改进版，读取上百kb的文件执行时间可以接受，StringBuilder执行效率远大于Mytext += j.ToString("X2")。
+
+            int file_len;
+            byte[] binchar = new byte[] { };
+
+            FileStream Myfile = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            BinaryReader binreader = new BinaryReader(Myfile);
+
+            file_len = (int)Myfile.Length;//获取bin文件长度
+
+            StringBuilder str = new StringBuilder();
+
+            binchar = binreader.ReadBytes(file_len);
+
+            foreach (byte j in binchar)
+            {
+                str.Append(j.ToString("X2"));
+                str.Append(" ");
+            }
+
+            textBox1.Text = str.ToString();
+            binreader.Close();
